@@ -5,6 +5,7 @@
 
 using namespace cv;
 using namespace std;
+
 int LowerH = 169;
 int LowerS = 150;
 int LowerV = 130;
@@ -14,13 +15,10 @@ int UpperV = 256;
 int HC_Param1 = 200;
 int HC_Param2 = 60;
 int HL_Threshold = 100;
-int main(int argc, char** argv){
-	VideoCapture cap(0);
-	if(!cap.isOpened())
-	{
-		cout << "Cannot open camera" << endl;
-		return -1;
-	}
+Mat img_hsv,img_mask;
+
+void thresh_callback(int,void*);
+void createTrackbars(){
 	namedWindow("Control");
 	createTrackbar("LowerH","Control",&LowerH,180,NULL);
 	createTrackbar("UpperH","Control",&UpperH,180,NULL);
@@ -32,7 +30,21 @@ int main(int argc, char** argv){
 	createTrackbar("HC_Param2","Control",&HC_Param2,450,NULL);
 	createTrackbar("HL_Threshold","Control",&HL_Threshold,450,NULL);
 
-	Mat img_hsv,img_mask;
+}
+void colorDetection(Mat &frame){
+	// Color Detection
+	cvtColor(frame, img_hsv, CV_BGR2HSV);
+	inRange(img_hsv,cv::Scalar(LowerH,LowerS,LowerV), cv::Scalar(UpperH,UpperS,UpperV),img_mask);
+
+}
+int main(int argc, char** argv){
+	createTrackbars();
+	VideoCapture cap(0);
+	if(!cap.isOpened())
+	{
+		cout << "Cannot open camera" << endl;
+		return -1;
+	}
 
 	Mat frame;
 	while(1){
@@ -46,8 +58,7 @@ int main(int argc, char** argv){
 			return -1;
 		}
 		// Color Detection
-		cvtColor(frame, img_hsv, CV_BGR2HSV);
-		inRange(img_hsv,cv::Scalar(LowerH,LowerS,LowerV), cv::Scalar(UpperH,UpperS,UpperV),img_mask);
+		colorDetection(frame);
 		imshow("Img Mask", img_mask);
 //		
 //		//Circle Detection
