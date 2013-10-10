@@ -60,29 +60,16 @@ int main(int argc, char** argv){
 		// Color Detection
 		colorDetection(frame);
 		imshow("Img Mask", img_mask);
-//		
-//		//Circle Detection
-//		Mat src, src_gray; 
-//		src = imread( argv[1], 1 );
-//		cvtColor(src, src_gray, CV_BGR2GRAY);	
+
+		//Circle Detection
 		GaussianBlur(img_mask, img_mask, Size(9, 9), 2, 2);
-//		GaussianBlur(src_gray, src_gray, Size(9, 9), 2, 2);
 		vector<Vec3f> circles;
 		HoughCircles(img_mask, circles, CV_HOUGH_GRADIENT, 1, img_mask.rows/8, HC_Param1, HC_Param2, 0, 0);
-//
-//		//Line Detection
-	    //src = imread(argv[1], 1);
-	    //if(src.empty())
-	    //{
-	    //    cout << "can not open " <<  endl;
-	    //    return -1;
-	    //}
-	
+
+		//Line Detection
+		
 	    Mat dst, cdst;
 		Canny(img_mask,dst,10,200,3);
-		//imshow("dst",dst);	
-//	    //Canny(src, dst, 50, 200, 3);
-//	    //cvtColor(dst, cdst, COLOR_GRAY2BGR);
 	    vector<Vec2f> lines;
 	    HoughLines(dst, lines, 1, CV_PI/180, HL_Threshold, 0, 0 );
 	    for( size_t i = 0; i < lines.size(); i++ )
@@ -108,9 +95,6 @@ int main(int argc, char** argv){
     	    circle( frame, center, radius, Scalar(0,255,0), 3, 8, 0 );
     	}
 
-		//cout << "Line Detected: " << lines.size() << endl;
-		//cout << "Circle Detected: " << circles.size() << endl;
-		//imshow("Img Mask", img_mask);
 		imshow("Detected", frame);
 
 		if(waitKey(10)>=0) break;
