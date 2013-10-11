@@ -86,7 +86,7 @@ int main(int argc, char** argv){
 	}
 
 	while(1){
-		#if 0
+		#if 1
 		cap >> frame;
 		#else 
 		frame = imread(argv[1],1);	
