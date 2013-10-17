@@ -6,7 +6,7 @@
 using namespace cv;
 using namespace std;
 
-int LowerH = 169;
+int LowerH = 0;
 int LowerS = 150;
 int LowerV = 130;
 int UpperH = 180;
@@ -14,7 +14,7 @@ int UpperS = 256;
 int UpperV = 256;
 int HC_Param1 = 200;
 int HC_Param2 = 30;
-int HL_Threshold = 30;
+int HL_Threshold = 100;
 int HL_MinLineLength = 1;
 Mat img_hsv,img_mask;
 Mat frame;
@@ -86,7 +86,7 @@ int main(int argc, char** argv){
 	}
 
 	while(1){
-		#if 1
+		#if 0
 		cap >> frame;
 		#else 
 		frame = imread(argv[1],1);	
@@ -125,7 +125,18 @@ int main(int argc, char** argv){
 	    Mat dst, cdst;
 		Canny(img_mask,dst,10,200,3);
 	    vector<Vec2f> lines;
+	    vector<Vec2f> lines_filtered;
 	    HoughLines(dst, lines, 1, CV_PI/180, HL_Threshold, 0, 0 );
+		for(int i = 0; i < lines.size(); i++){
+			for(int j = i+1; j < lines.size(); j++){
+				if( ((lines[i][1] - lines[j][1]) <= 0.001) && ((lines[i][1] - lines[j][1]) >= -0.001) ){
+					lines_filtered.push_back(lines[i]);
+					lines_filtered.push_back(lines[j]);
+				}
+			}
+		}
+		lines = lines_filtered;
+	
 	    //vector<Vec4i> lines;
 	    //HoughLinesP(dst, lines, 1, CV_PI/180, HL_Threshold, HL_MinLineLength, 40 );
 	    for( size_t i = 0; i < lines.size(); i++ )
