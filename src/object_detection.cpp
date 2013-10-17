@@ -129,7 +129,7 @@ int main(int argc, char** argv){
 	    HoughLines(dst, lines, 1, CV_PI/180, HL_Threshold, 0, 0 );
 		for(int i = 0; i < lines.size(); i++){
 			for(int j = i+1; j < lines.size(); j++){
-				if( ((lines[i][1] - lines[j][1]) <= 0.001) && ((lines[i][1] - lines[j][1]) >= -0.001) ){
+				if( ((lines[i][1] - lines[j][1]) <= 0.001) && ((lines[i][1] - lines[j][1]) >= -0.001) &&  ((lines[i][0] - lines[j][0]) >= -25) && ((lines[i][0] - lines[j][0]) <= 25) ){
 					lines_filtered.push_back(lines[i]);
 					lines_filtered.push_back(lines[j]);
 				}
@@ -142,6 +142,7 @@ int main(int argc, char** argv){
 	    for( size_t i = 0; i < lines.size(); i++ )
 	    {
 	        float rho = lines[i][0], theta = lines[i][1];
+			cout << rho << endl;
 	        Point pt1, pt2;
 	        double a = cos(theta), b = sin(theta);
 	        double x0 = a*rho, y0 = b*rho;
